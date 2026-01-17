@@ -8,7 +8,7 @@
 PSMA needs:
 - a Next.js web UI
 - a Python/FastAPI backend API
-- contract-first boundaries (OpenAPI)
+- contract-first boundaries (OpenAPI + JSON Schemas + curated registries)
 - low-friction local development for a small team
 
 We want a setup that remains maintainable as PSMA grows, without introducing unnecessary tooling early.
@@ -23,11 +23,15 @@ We want a setup that remains maintainable as PSMA grows, without introducing unn
 - `apps/web`: Next.js UI (runs on `:3000`)
 - `apps/api`: FastAPI backend (runs on `:8000`)
 - `packages/api-client`: OpenAPI-derived TypeScript types for clients
-- `contracts/`: versionable API contracts
+- `contracts/`: versionable API contracts (OpenAPI + JSON Schemas + registries)
 
 ### 3) API typing strategy
 - Generate an OpenAPI document from the FastAPI app into `contracts/openapi/psma.openapi.json`.
 - Generate TypeScript types from that OpenAPI document into `packages/api-client`.
+
+Related contract strategy:
+- Maintain JSON Schemas under `contracts/jsonschema/` for internal contracts (engine outputs, provider outputs, AI outputs).
+- Maintain curated registries under `contracts/registry/` for normalization (e.g., canonical `service_id` mapping).
 
 ### 4) Tooling choices
 - **Backend dependency management:** `uv`

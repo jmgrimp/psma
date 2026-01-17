@@ -12,6 +12,10 @@ This is a conceptual model. Implementation details (tables, collections, etc.) a
 - **Plan**: a set of subscribe/unsubscribe events with rationale.
 - **Provenance**: metadata describing where a fact came from and how trustworthy it is.
 
+Note on terminology:
+- In JSON contracts (engine/provider outputs), the upstream adapter identifier is called `source_id`.
+- In the conceptual ER diagram below, the same concept is represented as `provider_id` on `PROVIDER` and referenced by facts.
+
 ## Availability representation
 
 PSMA standardizes provider data into **availability windows**:

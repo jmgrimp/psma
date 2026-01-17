@@ -21,7 +21,7 @@ MVP can start with a minimal set and grow.
 ## 3. Provider contract requirements
 
 Every provider output must include provenance:
-- `provider_id`
+- `source_id` (adapter identifier, e.g. `tmdb_watch_providers`, `tvmaze_episodes`, `manual_import`)
 - `retrieved_at`
 - `confidence` (provider-supplied or computed)
 - optional `source_ref` (URL/id)
@@ -54,7 +54,7 @@ Requirements:
   - shows
   - services
   - availability windows
-- Attach provenance as `provider_id = manual_import`.
+- Attach provenance as `source_id = manual_import`.
 
 ## 6. Freshness and refresh
 

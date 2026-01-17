@@ -22,7 +22,10 @@ PSMA uses a “core + ports/adapters” approach.
 - **Core** (business logic, tech-agnostic)
   - Domain model (shows, services, availability windows, user preferences)
   - Use cases (sync catalog, manage selections, generate plan, evaluate changes)
-  - Planner (deterministic subscription schedule generation)
+  - Engines (deterministic business logic)
+    - Availability Engine (canonical availability assessments from heterogeneous facts)
+    - Planner (subscribe/unsubscribe plan generation)
+    - Advice Engine (AI-assisted, confirmation-based explanations/questions)
 
 - **Adapters** (replaceable)
   - Provider adapters (catalog + availability)
@@ -90,3 +93,16 @@ flowchart LR
 3. **Explicit assumptions**: planning uses documented rules (billing/proration buffers, etc.).
 4. **Human confirmation**: AI suggests changes; user confirms.
 5. **Event-driven thinking**: updates produce events; events trigger evaluation, suggestions, and plan deltas.
+
+## Engines (critical business logic)
+
+PSMA implements critical business logic as **engines**: deterministic modules that consume canonical facts and emit canonical outputs.
+
+Engine constraints:
+- Engines are vendor-agnostic; adapters translate external APIs into canonical fact types.
+- Engine outputs are contract-first and should be validated against JSON Schemas (e.g., availability assessments).
+- Engines must remain deterministic given the same inputs; any user tie-breaks must be stored as explicit, provenance-backed facts/preferences.
+
+See also:
+- [docs/technical/18-Availability-Engine.md](18-Availability-Engine.md)
+- [docs/technical/17-Availability-Semantics-and-Subscribe-Planning.md](17-Availability-Semantics-and-Subscribe-Planning.md)

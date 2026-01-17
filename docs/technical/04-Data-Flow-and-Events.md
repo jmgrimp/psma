@@ -29,17 +29,22 @@ flowchart TD
   A["Scheduled or Manual Refresh"] --> B["Ingest from Providers"];
   B --> C["Normalize and Store Provenance"];
   C --> D["Merge to Canonical View"];
-  D --> E["Diff vs Previous Snapshot"];
-  E --> F{"Impact to User?"};
-  F -- "No" --> G["No Action"];
-  F -- "Yes" --> H["Propose Plan Delta"];
-  H --> I["AI Explains and Asks Questions"];
-  I --> J{"User Confirms?"};
-  J -- "No" --> K["Keep Current Plan"];
-  J -- "Yes" --> L["Apply Confirmed Updates"];
-  L --> M["Generate Updated Plan"];
-  M --> N["Reminder Export / Notifications"];
+  D --> E["Availability Engine(s): Assess Availability"];
+  E --> F["Diff vs Previous Snapshot"];
+  F --> G{"Impact to User?"};
+  G -- "No" --> H["No Action"];
+  G -- "Yes" --> I["Planner: Propose Plan Delta"];
+  I --> J["Advice Engine (AI): Explain + Ask"];
+  J --> K{"User Confirms?"};
+  K -- "No" --> L["Keep Current Plan"];
+  K -- "Yes" --> M["Apply Confirmed Updates"];
+  M --> N["Planner: Generate Updated Plan"];
+  N --> O["Reminder Export / Notifications"];
 ```
+
+Notes:
+- “Availability Engine(s)” are responsible for turning heterogeneous facts (snapshots, schedules, lineups) into canonical availability assessments.
+- The planner consumes those assessments plus user preferences/service profile and produces deterministic plan events.
 
 ## Conflicts as first-class objects
 

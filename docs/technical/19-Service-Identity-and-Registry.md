@@ -74,7 +74,10 @@ Pricing can be used as a tie-breaker, but must be treated as time-bound:
 - The service registry is a curated artifact (checked into the repo) and can be extended incrementally.
 - Future: allow per-tenant overrides or user overrides, still mapping to canonical `service_id`.
 
+Registry:
+- [contracts/registry/service-registry.v1.json](../../contracts/registry/service-registry.v1.json)
+
 Related:
-- contracts/jsonschema/availability/availability-assessment.v1.schema.json
-- docs/technical/18-Availability-Engine.md
-- docs/technical/ADR-0004-Deterministic-TieBreakers-and-Buffers.md
+- [contracts/jsonschema/availability/availability-assessment.v1.schema.json](../../contracts/jsonschema/availability/availability-assessment.v1.schema.json)
+- [docs/technical/18-Availability-Engine.md](18-Availability-Engine.md)
+- [docs/technical/ADR-0004-Deterministic-TieBreakers-and-Buffers.md](ADR-0004-Deterministic-TieBreakers-and-Buffers.md)

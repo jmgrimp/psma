@@ -29,6 +29,9 @@ PSMA MVP enables a US-based internal pilot user to:
 
 ### Planning
 - Deterministic plan generation given the same inputs.
+- Planning is engine-driven:
+  - Availability Engine(s) produce canonical availability assessments from heterogeneous provider facts.
+  - Planner consumes those assessments + user preferences/service profile and generates the subscription plan.
 - Plan output includes:
   - dated `subscribe`/`unsubscribe` events per service
   - a rationale for each event (what drove it)
@@ -98,6 +101,10 @@ PSMA MVP enables a US-based internal pilot user to:
 - The system records provenance for imported facts.
 - Conflicts are visible and resolvable via confirmation.
 - AI never silently changes preferences or catalog facts.
+
+Engine contract constraints:
+- Engine outputs are validated against versioned JSON Schemas under `contracts/jsonschema/`.
+- Canonical `service_id` mappings come from curated registries under `contracts/registry/`.
 
 ## 7. MVP non-functional requirements
 

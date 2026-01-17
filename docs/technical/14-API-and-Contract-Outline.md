@@ -1,12 +1,26 @@
 # API and Contract Outline — WIP
 
-This document outlines external API capabilities and internal contract artifacts needed for backlog confidence.
+This document outlines the external API capabilities and the contract artifacts used to keep UI, adapters, and engines aligned.
 
-## 1. Contract-first artifacts (planned)
+## 1. Contract-first artifacts (current + planned)
 
-- **External API**: OpenAPI spec
-- **Provider outputs**: JSON Schema
-- **AI outputs**: JSON Schema
+### External API (current)
+
+- **OpenAPI**: `contracts/openapi/psma.openapi.json`
+- Generate/update it via `pnpm gen:openapi`
+
+### Internal contracts (current)
+
+- **Availability engine outputs** (JSON Schema):
+	- `contracts/jsonschema/availability/availability-assessment.v1.schema.json`
+	- `contracts/jsonschema/availability/availability-assessments-response.v1.schema.json`
+- **Curated registries** (data normalization, checked-in):
+	- `contracts/registry/service-registry.v1.json` (canonical `service_id` mappings)
+
+### Internal contracts (planned)
+
+- **Provider raw fact outputs** (JSON Schema) for each adapter (e.g., TMDB watch-provider snapshots).
+- **AI outputs** (JSON Schema) for advice/questions and user confirmations.
 
 ## 2. External API capabilities (conceptual)
 
@@ -40,8 +54,9 @@ This document outlines external API capabilities and internal contract artifacts
 
 ## 3. Versioning
 
-- External API versioned under `/v1`.
-- Provider/AI schemas carry `contract_version`.
+- OpenAPI is treated as versionable output under `contracts/openapi/`.
+- JSON Schemas are versioned by filename (e.g., `*.v1.schema.json`).
+- Whether the REST API uses a `/v1` prefix is a future decision; the OpenAPI document is the source of truth.
 
 ## 4. Open questions
 

@@ -108,13 +108,16 @@ Compatibility rule:
 Suggested fields:
 - `title_id` (canonical)
 - `country`
-- `provider_id`
+- `service_id` (canonical)
 - `provider_category` (svod|avod|tvod|live_bundle|unknown)
-- `availability_now` (true|false|unknown)
+- `availability_now` (`"true"`|`"false"`|`"unknown"`)
 - `availability_window` (optional: start/end when known)
 - `confidence` (high|medium|low)
 - `reason_codes[]`
 - `evidence[]` (references to input facts)
+
+Canonical contract:
+- [contracts/jsonschema/availability/availability-assessment.v1.schema.json](../../contracts/jsonschema/availability/availability-assessment.v1.schema.json)
 
 ### Planning Hints
 The engine can optionally produce planning-friendly signals:
@@ -152,8 +155,16 @@ flowchart TD
 
 ## Practical Next Steps (Docs-Only)
 
-1) Add a stable JSON schema for the `AvailabilityAssessment` output.
-2) Define the initial provider capability registry format (manual curated + overrides).
+Completed:
+
+1) Stable JSON schema for `AvailabilityAssessment` output:
+  - [contracts/jsonschema/availability/availability-assessment.v1.schema.json](../../contracts/jsonschema/availability/availability-assessment.v1.schema.json)
+  - [contracts/jsonschema/availability/availability-assessments-response.v1.schema.json](../../contracts/jsonschema/availability/availability-assessments-response.v1.schema.json)
+2) Initial curated service registry (canonical `service_id` + category + external IDs):
+  - [contracts/registry/service-registry.v1.json](../../contracts/registry/service-registry.v1.json)
+
+Still needed:
+
 3) Identify candidate EPG/lineup sources for live bundles (even if not implemented yet).
 
 4) Define adapter registration and configuration:
