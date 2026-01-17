@@ -8,7 +8,11 @@ PSMA combines streaming availability information from one or more sources (“pr
 
 PSMA needs two main kinds of information:
 - **Show identity and metadata:** the title, season/episode structure, and identifiers.
-- **Availability windows:** where and when a show is streamable (for the US in MVP).
+- **Streaming availability:** where a show can be watched.
+
+Important nuance:
+- Episode air dates indicate *release cadence*, not necessarily “available on-demand right now.”
+- Many availability sources provide a best-effort snapshot (“available now”) rather than a reliable start/end window.
 
 PSMA is designed to support multiple providers over time.
 
@@ -63,6 +67,16 @@ Instead, it:
 - marks the end date as unknown
 - uses a conservative default planning horizon (and labels it as an assumption)
 - may ask a user how long they expect to keep the subscription if it affects cost/overlap
+
+## Live TV bundles and always-on services
+
+Some services behave differently than on-demand libraries (examples: live TV bundles/aggregators).
+
+In MVP, PSMA treats these as first-class user inputs:
+- A user can mark a service as **permanent** (always-on).
+- Permanent services can satisfy “I already have access” without generating subscribe/unsubscribe actions.
+
+This avoids over-promising precision where the data is fundamentally different (live lineups and airings vs on-demand catalogs).
 
 ## Manual import (so the MVP always works)
 

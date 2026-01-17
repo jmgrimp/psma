@@ -6,7 +6,7 @@
 
 ## 2. The problem
 - Streaming fragmentation
-- Manual work to track where/when
+- Manual work to track where to watch (and when to subscribe)
 - Subscription creep and wasted spend
 
 ## 3. The solution

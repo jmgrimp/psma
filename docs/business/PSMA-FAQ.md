@@ -43,3 +43,16 @@ MVP is single-user for internal trial simplicity, but the architecture is design
 
 ## How will we add more services and data sources?
 PSMA is built to incorporate multiple “providers.” Providers can be added over time to improve coverage and data quality.
+
+## Why isn’t a live TV bundle (like YouTube TV) listed as “where to watch” for a show?
+Many “where to watch” sources focus on on-demand libraries.
+
+Live TV bundles work differently:
+- Access depends on your local lineup (networks/channels) and current/recent airings.
+- Title-level “available on Service X” data is often missing or not comparable to on-demand data.
+
+In PSMA MVP, the practical approach is:
+- treat your live bundle as a **permanent service** (always-on)
+- let PSMA plan add-on subscriptions around it
+
+Over time, PSMA can become smarter about live bundles by incorporating lineup and airing data.

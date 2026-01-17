@@ -8,6 +8,10 @@ This document summarizes the technology choices for PSMA in plain language: what
 
 PSMA is a local-first app that aggregates “where/when to watch” information, lets users pick shows and viewing preferences, and produces a simple subscribe/unsubscribe plan—plus reminders—without automating purchases or cancellations.
 
+Note (MVP reality): “when” is often best-effort.
+- Episode air dates indicate release cadence.
+- Streaming availability data is commonly a snapshot (“available now”), and end dates are often unknown.
+
 ## Stack decision (what we picked)
 
 ### Web UI

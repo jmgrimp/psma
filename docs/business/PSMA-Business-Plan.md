@@ -15,7 +15,9 @@ Streaming has become increasingly fragmented:
 
 As a result, users who want to watch a set of shows must repeatedly do manual work:
 1. Determine *where* a show is available.
-2. Determine *when* it is available (release dates; availability windows).
+2. Determine *when* it makes sense to subscribe:
+  - release cadence (air dates)
+  - and best-effort streaming availability (often “available now” snapshots; end dates may be unknown)
 3. Subscribe to the right service.
 4. Remember to unsubscribe when the viewing goal is complete.
 
@@ -69,7 +71,7 @@ PSMA differentiates by combining:
 
 ## Feasibility and constraints
 ### What is straightforward
-- The planning logic (generate a schedule from availability windows and user preferences).
+- The rules-based planning logic (turn best-effort availability information and user preferences into a schedule).
 - A simple UI to select shows and view a plan.
 - A reminder/export mechanism (e.g., calendar export) with no ongoing service costs.
 
@@ -77,10 +79,19 @@ PSMA differentiates by combining:
 - Comprehensive, accurate “where to watch” availability data across all services is often commercial and/or restricted.
 - Release dates can be unknown or shift.
 
+Important nuance:
+- Episode air dates indicate *release cadence*, not necessarily on-demand streaming availability.
+- Many sources provide a best-effort “available now” snapshot, and end dates are often unknown.
+- Live TV bundles/aggregators behave differently than on-demand libraries (lineups + airings vs title-level availability).
+
 Therefore the MVP strategy is:
 - operate on best-effort data for internal trials
 - clearly label sources and confidence
 - design a multi-provider system so coverage and quality improve over time
+
+And for services with different semantics (e.g., live bundles), MVP planning emphasizes practicality:
+- users can mark services as **permanent** (always-on)
+- PSMA plans add-on subscriptions around those always-on services
 
 ## Product approach: local-first and low-cost
 ### Operating model
@@ -106,7 +117,7 @@ Key principles:
 ### Handling data changes
 Data changes are expected:
 - a show moves between services
-- availability windows tighten or expand
+- availability signals change (a show appears/disappears on a service, or confidence changes)
 - release dates become known or change
 
 PSMA will:

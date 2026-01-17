@@ -34,6 +34,11 @@ These examples illustrate what PSMA produces and how it behaves in common situat
 - AI explains the impact.
 - You confirm/decline changes and then PSMA regenerates the plan.
 
+## Example: You already have an always-on service (“permanent service”)
+- You mark a service you keep year-round (for example, a live TV bundle) as **permanent**.
+- PSMA treats that access as already available and does not tell you to subscribe/unsubscribe to it.
+- PSMA still plans any additional short-term subscriptions needed for specific shows.
+
 ## Source of truth
 
 This document is based on:

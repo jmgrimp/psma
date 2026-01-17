@@ -19,10 +19,15 @@ This creates unnecessary cost, time spent researching, and frequent “subscript
 
 ## The solution (MVP)
 PSMA provides:
-- A single place to view a best-effort catalog of shows available in the US (from multiple free data sources where possible).
+- A single place to view a best-effort catalog of shows in the US and the best-available “where to watch” information.
 - A way to select shows and choose how you want to watch them (e.g., weekly as episodes release vs binge after a season completes).
 - A recommended subscription schedule that minimizes time subscribed while matching user preferences.
 - Reminders/instructions for subscribing and unsubscribing (MVP: confirmation-based; no automation).
+
+Important nuance (MVP reality):
+- Episode air dates indicate *release cadence*, not necessarily on-demand streaming availability.
+- “Where to watch” data is typically a best-effort snapshot (available now), and end dates are often unknown.
+- Live TV bundles (e.g., YouTube TV) may require different data (lineups/airings) and are often treated as an always-on “permanent service” in planning.
 
 ## Why it’s different
 Most “where to watch” apps tell you where content is available.
