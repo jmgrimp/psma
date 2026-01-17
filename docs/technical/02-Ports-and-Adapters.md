@@ -10,6 +10,17 @@ This document describes the stable contracts (“ports”) and the replaceable i
 
 ## Primary ports
 
+### Availability engines
+
+Responsibilities:
+- Combine facts from multiple adapters into canonical availability assessments.
+- Keep core logic vendor-agnostic; adapters map external APIs into canonical fact types.
+- Support adding new services/providers by adding a new adapter and configuration, without changing engine logic.
+
+Notes:
+- VOD (title → provider) and live bundles (title → network → bundle) may use separate engines behind a shared orchestrator.
+- Engine outputs should be validated against stable schemas (contract-first).
+
 ### Program listing provider
 
 Responsibilities:

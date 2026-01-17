@@ -24,6 +24,8 @@ PSMA MVP enables a US-based internal pilot user to:
   - `as_aired`
   - `binge_after_season`
 - If binge mode: set a binge duration (days).
+- Maintain a user service profile:
+  - mark services as “permanent” (always-on) so the planner does not recommend subscribing/unsubscribing those services
 
 ### Planning
 - Deterministic plan generation given the same inputs.
@@ -51,6 +53,7 @@ PSMA MVP enables a US-based internal pilot user to:
 - Full pricing/billing-cycle optimization (time-minimization first).
 - Multi-tenant hosted operation (MVP runs single-user mode, but data model is future-aware).
 - Safety/age-suitability answers (requires ratings provider and policy).
+- Premium data-provider integrations and paid-tier features (future).
 
 ## 4. Assumptions (must be explicit)
 
@@ -58,6 +61,9 @@ PSMA MVP enables a US-based internal pilot user to:
 - Availability is represented as windows: `available_from` and optional `available_until`.
 - If `available_until` is unknown:
   - planner uses a conservative default horizon and flags the assumption in rationale.
+- Some services are treated as “permanent” by the user (e.g., YouTube TV as a cord-cutting bundle):
+  - planner must treat them as already-subscribed for the plan horizon
+  - planner may still recommend *non-permanent* add-on subscriptions alongside them
 
 ### Optimization target (MVP)
 - Primary objective: minimize *time subscribed* while meeting user watch-mode constraints.
@@ -105,3 +111,12 @@ PSMA MVP enables a US-based internal pilot user to:
 - (Resolved) Default planning horizon when `available_until` is unknown: see ADR-0003.
 - (Resolved) Deterministic policy for selecting among multiple services: see ADR-0004.
 - Which reminder mechanism is MVP: in-app only, ICS only, or both?
+
+## 9. Future: Premium data sources (paid tier)
+
+PSMA can improve availability accuracy by adding premium APIs in a paid version.
+
+Requirements:
+- Premium providers must remain optional adapters behind stable contracts.
+- Outputs must include provenance and retrieval time, and must merge cleanly with free/manual sources.
+- The system must remain usable without premium providers (graceful degradation).

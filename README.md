@@ -6,7 +6,14 @@
 - Technical index: [docs/technical/README.md](docs/technical/README.md)
 - Business index: [docs/business/README.md](docs/business/README.md)
 
-## Development Quickstart
+## Repository Layout
+
+- `apps/api` — FastAPI backend (Python + `uv`)
+- `apps/web` — Next.js frontend (Node + pnpm)
+- `packages/api-client` — generated API client/types (OpenAPI → TS)
+- `contracts/` — versionable contracts (OpenAPI + JSON Schemas + registries)
+
+## Development (Full Setup)
 
 ### Prereqs
 
@@ -14,10 +21,14 @@
 - pnpm (via Corepack)
 - `uv` for Python dependency management
 
+Ports used by default:
+- API: `http://localhost:8000`
+- Web: `http://localhost:3000`
+
 Recommended installs:
 
 - Node via nvm:
-	- `nvm install 20 && nvm use 20`
+	- `nvm install && nvm use`
 - pnpm via Corepack:
 	- `corepack enable && corepack prepare pnpm@9.15.4 --activate`
 - `uv` (macOS/Linux):
@@ -27,13 +38,21 @@ Recommended installs:
 
 ### Install
 
+1) Install Node dependencies (repo root):
 - `pnpm install`
+
+2) Install Python dependencies (API):
 - `cd apps/api && uv sync --dev`
 
 ### Environment
 
-- Web: copy [apps/web/.env.local.example](apps/web/.env.local.example) → `apps/web/.env.local`
-- API: copy `apps/api/.env.example` → `apps/api/.env`
+Web:
+- Copy [apps/web/.env.local.example](apps/web/.env.local.example) → `apps/web/.env.local`
+- Set `NEXT_PUBLIC_API_BASE_URL` (defaults to `http://localhost:8000`)
+
+API:
+- Copy `apps/api/.env.example` → `apps/api/.env`
+- Set `PSMA_TMDB_API_KEY` to enable TMDB endpoints
 
 ### Run (dev)
 
@@ -53,9 +72,23 @@ Alternatively, run both with:
 
 - `./scripts/dev.sh`
 
+### Verify it's working
+
+Backend:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+Frontend smoke pages:
+- `http://localhost:3000/smoke/providers`
+- `http://localhost:3000/smoke/interactive`
+
 ### Generate API types
 
+Generate OpenAPI + TypeScript client/types:
 - `pnpm gen:api`
+
+Generate just OpenAPI:
+- `pnpm gen:openapi`
 
 ## Provider API quick test (dev)
 
@@ -80,5 +113,16 @@ Note: TMDB watch-provider data requires JustWatch attribution (per TMDB docs). O
 
 ## Troubleshooting
 
-- If Next.js refuses to start due to Node version, run `nvm use 20` and retry.
+- If Next.js refuses to start due to Node version, ensure Node >= 20.9 (then `nvm use`) and retry.
 - If `uv` is not found after installing, run `source $HOME/.local/bin/env` (and add it to your shell profile).
+- If TMDB endpoints return HTTP 503, verify `PSMA_TMDB_API_KEY` is set in `apps/api/.env` and restart `pnpm dev:api`.
+- If ports are in use, stop the conflicting process or change ports in your run command.
+
+## Lint and tests
+
+API:
+- Tests: `cd apps/api && uv run pytest -q`
+- Lint: `cd apps/api && uv run ruff check`
+
+Web:
+- Lint: `pnpm -C apps/web lint`

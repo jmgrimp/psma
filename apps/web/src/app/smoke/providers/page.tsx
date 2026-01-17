@@ -10,6 +10,17 @@ type FetchState =
   | { status: "success"; httpStatus: number; body: unknown }
   | { status: "error"; message: string; httpStatus?: number; body?: unknown };
 
+function normalizeFetchError(err: unknown): { message: string; httpStatus?: number; body?: unknown } {
+  if (typeof err === "object" && err !== null) {
+    const maybe = err as { message?: unknown; httpStatus?: unknown; body?: unknown };
+    const message = typeof maybe.message === "string" ? maybe.message : "Unknown error";
+    const httpStatus = typeof maybe.httpStatus === "number" ? maybe.httpStatus : undefined;
+    return { message, httpStatus, body: maybe.body };
+  }
+  if (err instanceof Error) return { message: err.message };
+  return { message: "Unknown error" };
+}
+
 async function fetchJson(url: string): Promise<{ httpStatus: number; body: unknown }> {
   const res = await fetch(url, { cache: "no-store" });
   const httpStatus = res.status;
@@ -54,6 +65,17 @@ export default function ProviderSmokePage() {
   const [tmdbCountry, setTmdbCountry] = useState("US");
   const [tmdbProvidersState, setTmdbProvidersState] = useState<FetchState>({ status: "idle" });
 
+  const [tmdbProvidersListCountry, setTmdbProvidersListCountry] = useState("US");
+  const [tmdbProvidersListLanguage, setTmdbProvidersListLanguage] = useState("en-US");
+  const [tmdbProvidersListState, setTmdbProvidersListState] = useState<FetchState>({ status: "idle" });
+
+  const [tmdbDiscoverProviderId, setTmdbDiscoverProviderId] = useState("8");
+  const [tmdbDiscoverCountry, setTmdbDiscoverCountry] = useState("US");
+  const [tmdbDiscoverMonetizationTypes, setTmdbDiscoverMonetizationTypes] = useState("flatrate");
+  const [tmdbDiscoverSortBy, setTmdbDiscoverSortBy] = useState("popularity.desc");
+  const [tmdbDiscoverPage, setTmdbDiscoverPage] = useState("1");
+  const [tmdbDiscoverState, setTmdbDiscoverState] = useState<FetchState>({ status: "idle" });
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-10">
       <header className="flex flex-col gap-2">
@@ -84,13 +106,9 @@ export default function ProviderSmokePage() {
                 const url = `${baseUrl}/providers/tvmaze/search/shows?q=${encodeURIComponent(tvmazeQuery)}`;
                 const result = await fetchJson(url);
                 setTvmazeSearchState({ status: "success", ...result });
-              } catch (err: any) {
-                setTvmazeSearchState({
-                  status: "error",
-                  message: err?.message ?? "Unknown error",
-                  httpStatus: err?.httpStatus,
-                  body: err?.body,
-                });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTvmazeSearchState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
               }
             }}
           >
@@ -151,13 +169,9 @@ export default function ProviderSmokePage() {
 
                 const result = await fetchJson(url);
                 setTvmazeShowState({ status: "success", ...result });
-              } catch (err: any) {
-                setTvmazeShowState({
-                  status: "error",
-                  message: err?.message ?? "Unknown error",
-                  httpStatus: err?.httpStatus,
-                  body: err?.body,
-                });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTvmazeShowState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
               }
             }}
           >
@@ -205,13 +219,9 @@ export default function ProviderSmokePage() {
                 const url = `${baseUrl}/providers/tmdb/search/tv?query=${encodeURIComponent(tmdbQuery)}`;
                 const result = await fetchJson(url);
                 setTmdbSearchState({ status: "success", ...result });
-              } catch (err: any) {
-                setTmdbSearchState({
-                  status: "error",
-                  message: err?.message ?? "Unknown error",
-                  httpStatus: err?.httpStatus,
-                  body: err?.body,
-                });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTmdbSearchState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
               }
             }}
           >
@@ -270,13 +280,9 @@ export default function ProviderSmokePage() {
 
                 const result = await fetchJson(url);
                 setTmdbProvidersState({ status: "success", ...result });
-              } catch (err: any) {
-                setTmdbProvidersState({
-                  status: "error",
-                  message: err?.message ?? "Unknown error",
-                  httpStatus: err?.httpStatus,
-                  body: err?.body,
-                });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTmdbProvidersState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
               }
             }}
           >
@@ -304,6 +310,157 @@ export default function ProviderSmokePage() {
               {tmdbProvidersState.httpStatus ? ` (HTTP ${tmdbProvidersState.httpStatus})` : ""}
             </p>
             {tmdbProvidersState.body !== undefined && <PrettyJson value={tmdbProvidersState.body} />}
+          </>
+        )}
+      </section>
+
+      <section className="rounded-md border p-4">
+        <h2 className="text-base font-medium">TMDB: provider list (TV)</h2>
+
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbProvidersListCountry}
+            onChange={(e) => setTmdbProvidersListCountry(e.target.value)}
+            placeholder="Country (e.g. US)"
+          />
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbProvidersListLanguage}
+            onChange={(e) => setTmdbProvidersListLanguage(e.target.value)}
+            placeholder="Language (e.g. en-US)"
+          />
+          <button
+            className="rounded-md border px-3 py-2 text-sm"
+            onClick={async () => {
+              setTmdbProvidersListState({ status: "loading" });
+              try {
+                const params = new URLSearchParams();
+                const country = tmdbProvidersListCountry.trim();
+                const language = tmdbProvidersListLanguage.trim();
+                if (country.length > 0) params.set("country", country);
+                if (language.length > 0) params.set("language", language);
+                const url = `${baseUrl}/providers/tmdb/watch/providers/tv?${params.toString()}`;
+                const result = await fetchJson(url);
+                setTmdbProvidersListState({ status: "success", ...result });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTmdbProvidersListState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
+              }
+            }}
+          >
+            Run
+          </button>
+        </div>
+
+        {tmdbProvidersListState.status === "loading" && (
+          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">Loading…</p>
+        )}
+
+        {tmdbProvidersListState.status === "success" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+              HTTP {tmdbProvidersListState.httpStatus}
+            </p>
+            <PrettyJson value={tmdbProvidersListState.body} />
+          </>
+        )}
+
+        {tmdbProvidersListState.status === "error" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+              Error: {tmdbProvidersListState.message}
+              {tmdbProvidersListState.httpStatus ? ` (HTTP ${tmdbProvidersListState.httpStatus})` : ""}
+            </p>
+            {tmdbProvidersListState.body !== undefined && <PrettyJson value={tmdbProvidersListState.body} />}
+          </>
+        )}
+      </section>
+
+      <section className="rounded-md border p-4">
+        <h2 className="text-base font-medium">TMDB: discover TV by provider</h2>
+
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbDiscoverProviderId}
+            onChange={(e) => setTmdbDiscoverProviderId(e.target.value)}
+            placeholder="Provider ID (e.g. 8)"
+          />
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbDiscoverCountry}
+            onChange={(e) => setTmdbDiscoverCountry(e.target.value)}
+            placeholder="Country (e.g. US)"
+          />
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbDiscoverMonetizationTypes}
+            onChange={(e) => setTmdbDiscoverMonetizationTypes(e.target.value)}
+            placeholder="Monetization (e.g. flatrate,free)"
+          />
+
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbDiscoverSortBy}
+            onChange={(e) => setTmdbDiscoverSortBy(e.target.value)}
+            placeholder="sort_by (e.g. popularity.desc)"
+          />
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={tmdbDiscoverPage}
+            onChange={(e) => setTmdbDiscoverPage(e.target.value)}
+            placeholder="page (e.g. 1)"
+          />
+          <button
+            className="rounded-md border px-3 py-2 text-sm"
+            onClick={async () => {
+              setTmdbDiscoverState({ status: "loading" });
+              try {
+                const params = new URLSearchParams();
+                params.set("watch_provider_id", tmdbDiscoverProviderId.trim());
+
+                const country = tmdbDiscoverCountry.trim();
+                const monetization = tmdbDiscoverMonetizationTypes.trim();
+                const sortBy = tmdbDiscoverSortBy.trim();
+                const page = tmdbDiscoverPage.trim();
+
+                if (country.length > 0) params.set("country", country);
+                if (monetization.length > 0) params.set("monetization_types", monetization);
+                if (sortBy.length > 0) params.set("sort_by", sortBy);
+                if (page.length > 0) params.set("page", page);
+
+                const url = `${baseUrl}/providers/tmdb/discover/tv?${params.toString()}`;
+                const result = await fetchJson(url);
+                setTmdbDiscoverState({ status: "success", ...result });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setTmdbDiscoverState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
+              }
+            }}
+          >
+            Run
+          </button>
+        </div>
+
+        {tmdbDiscoverState.status === "loading" && (
+          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">Loading…</p>
+        )}
+
+        {tmdbDiscoverState.status === "success" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">HTTP {tmdbDiscoverState.httpStatus}</p>
+            <PrettyJson value={tmdbDiscoverState.body} />
+          </>
+        )}
+
+        {tmdbDiscoverState.status === "error" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+              Error: {tmdbDiscoverState.message}
+              {tmdbDiscoverState.httpStatus ? ` (HTTP ${tmdbDiscoverState.httpStatus})` : ""}
+            </p>
+            {tmdbDiscoverState.body !== undefined && <PrettyJson value={tmdbDiscoverState.body} />}
           </>
         )}
       </section>

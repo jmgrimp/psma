@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psma.dev/schemas/availability/availability-assessment.v1.schema.json",
+  "title": "AvailabilityAssessmentV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title_id",
+    "country",
+    "service_id",
+    "provider_category",
+    "availability_now",
+    "confidence",
+    "reason_codes",
+    "evidence"
+  ],
+  "properties": {
+    "title_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical internal title identifier."
+    },
+    "country": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "description": "ISO 3166-1 alpha-2 country code, e.g. US."
+    },
+    "service_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical internal service identifier (not a vendor ID)."
+    },
+    "provider_category": {
+      "type": "string",
+      "enum": ["svod", "avod", "tvod", "live_bundle", "unknown"],
+      "description": "Normalized service category used by engines and planner."
+    },
+    "availability_now": {
+      "type": "string",
+      "enum": ["true", "false", "unknown"],
+      "description": "Best-effort statement of whether the title is available right now on the service in the given country."
+    },
+    "availability_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When availability is known to begin (optional)."
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When availability is known to end (optional)."
+        }
+      },
+      "description": "Known availability window when explicit start/end are available; omitted for snapshot-only sources."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Confidence in the availability_now/window assessment."
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Machine-readable reasons explaining the assessment (e.g., SNAPSHOT_PRESENT, STALE_SNAPSHOT, LIVE_BUNDLE_NO_EPG)."
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "retrieved_at"],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Identifier of the upstream adapter/provider (e.g., tmdb_watch_providers, tvmaze_episodes, manual_import)."
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this evidence was retrieved from its source."
+          },
+          "source_ref": {
+            "type": ["string", "null"],
+            "description": "Optional reference (URL/id) to aid debugging and provenance."
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Optional structured details relevant to the evidence (must not include secrets)."
+          }
+        }
+      },
+      "description": "Evidence objects backing the assessment."
+    },
+    "planning_hints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cadence": { "type": "string", "enum": ["weekly", "batch", "ended", "unknown"] },
+        "next_air_time": { "type": "string", "format": "date-time" },
+        "last_air_time": { "type": "string", "format": "date-time" }
+      },
+      "description": "Optional planning-friendly hints; advisory inputs to the planner."
+    }
+  }
+}

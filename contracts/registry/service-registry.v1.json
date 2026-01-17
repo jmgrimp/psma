@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "services": [
+    {
+      "service_id": "netflix",
+      "display_name": "Netflix",
+      "category": "svod",
+      "external_ids": {
+        "tmdb_watch_provider_id": [8]
+      },
+      "notes": "SVOD on-demand library. Titles may have no upcoming air dates but still be available."
+    },
+    {
+      "service_id": "youtube-tv",
+      "display_name": "YouTube TV",
+      "category": "live_bundle",
+      "external_ids": {
+        "tmdb_watch_provider_id": []
+      },
+      "notes": "Live TV bundle/aggregator. Availability requires network lineup + EPG/DVR semantics; may be missing from TMDB watch providers catalog."
+    },
+    {
+      "service_id": "apple-tv-plus",
+      "display_name": "Apple TV+",
+      "category": "svod",
+      "external_ids": {
+        "tmdb_watch_provider_id": [350]
+      },
+      "notes": "SVOD on-demand library (Apple TV+), not to be confused with Apple TV (aggregator storefront)."
+    }
+  ]
+}

@@ -85,6 +85,21 @@ Requirements:
 - Rate limits and API key requirements.
 - Ability to store provenance references.
 
+## 9.1 Future: Premium providers (paid tier)
+
+Premium APIs may be added to improve accuracy and coverage (especially for live bundle/EPG and richer availability windows).
+
+Guidelines:
+- Treat premium providers as optional adapters; do not couple planner correctness to paid sources.
+- Prefer providers that offer explicit availability windows and/or network airing data.
+- Store provenance for premium data the same way as free sources (provider id, retrieved_at, confidence, source_ref).
+- If premium data conflicts with free data, record conflicts rather than silently overriding.
+
+Additional checklist items for premium providers:
+- Commercial terms compatible with intended deployment.
+- Rate limits and cost model are understood (and enforceable).
+- Data retention and redistribution rules are documented.
+
 ## 10. Open questions
 
 - Which initial free providers are acceptable from a ToS and reliability perspective?

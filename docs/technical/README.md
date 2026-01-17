@@ -23,6 +23,9 @@ This directory contains technical (non-marketing) documentation for the PSMA arc
 - [14-API-and-Contract-Outline.md](14-API-and-Contract-Outline.md) — API surface and contract artifacts needed for backlog confidence (WIP)
 - [15-Golden-Scenarios.md](15-Golden-Scenarios.md) — canonical scenarios for validation and demos (WIP)
 - [16-Logging.md](16-Logging.md) — logging foundations, conventions, and environment defaults
+- [17-Availability-Semantics-and-Subscribe-Planning.md](17-Availability-Semantics-and-Subscribe-Planning.md) — how PSMA interprets “available now” vs air dates and produces subscription windows
+- [18-Availability-Engine.md](18-Availability-Engine.md) — engine design for combining heterogeneous availability signals (VOD + live bundles)
+- [19-Service-Identity-and-Registry.md](19-Service-Identity-and-Registry.md) — canonical service_id strategy and mapping external IDs (e.g., TMDB provider ids)
 
 ## Diagram conventions
 

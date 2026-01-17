@@ -96,6 +96,15 @@ This document defines user stories for PSMA in a form suitable for engineering p
   - Constraints can be saved per user.
   - Planner and/or AI uses constraints when proposing changes.
 
+### B5 (MVP): Mark permanent services
+- **Actor**: Viewer
+- **Story**: As a viewer, I want to mark services I keep permanently (e.g., a live TV bundle) so PSMA doesn’t recommend subscribing/unsubscribing them.
+- **Acceptance criteria**
+  - User can add a service to their profile.
+  - User can mark a service as `permanent`.
+  - Planner treats permanent services as already subscribed for the plan horizon.
+  - Plan output contains no subscribe/unsubscribe events for permanent services.
+
 ---
 
 ## Epic C — Plan generation (deterministic)

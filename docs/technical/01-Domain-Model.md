@@ -8,6 +8,7 @@ This is a conceptual model. Implementation details (tables, collections, etc.) a
 - **Service**: a streaming provider (e.g., Netflix, Hulu).
 - **Availability Window**: when a show (or season) is available on a service in a region.
 - **User Preference**: how the user wants to watch a show.
+- **User Service Profile**: services the user already has (including “permanent” always-on services).
 - **Plan**: a set of subscribe/unsubscribe events with rationale.
 - **Provenance**: metadata describing where a fact came from and how trustworthy it is.
 
@@ -23,6 +24,7 @@ PSMA standardizes provider data into **availability windows**:
 
 - Selected shows
 - Per-show preferences (watch mode, binge duration, constraints)
+- User service profile (existing subscriptions; permanent services)
 - Availability windows (merged view)
 - Service behavior knowledge base (SBKB) facts (e.g., release patterns)
 - Explicit planning assumptions (buffer days, billing-cycle simplifications)
@@ -41,6 +43,7 @@ erDiagram
   USER ||--o{ USER_PREFERENCE : has
   USER ||--o{ USER_CONSTRAINT : has
   USER ||--o{ CONVERSATION_FACT : has
+  USER ||--o{ USER_SERVICE : has
 
   SHOW ||--o{ AVAILABILITY_WINDOW : has
   SERVICE ||--o{ AVAILABILITY_WINDOW : offers
@@ -92,6 +95,14 @@ erDiagram
     string show_id
     string watch_mode
     int binge_days
+  }
+
+  USER_SERVICE {
+    string user_id
+    string service_id
+    bool is_permanent
+    date started_on
+    date ended_on
   }
 
   PLAN {

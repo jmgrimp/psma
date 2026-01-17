@@ -19,8 +19,14 @@ PSMA is designed to:
 - Define and maintain stable contracts for:
   - external API (OpenAPI)
   - provider outputs (JSON schema)
+  - engine outputs (JSON schema; e.g., availability assessments)
   - AI outputs (JSON schema)
 - Avoid coupling UI logic to planning logic; UI must call a stable API boundary.
+
+Contract locations (current convention):
+- OpenAPI: `contracts/openapi/`
+- JSON Schemas: `contracts/jsonschema/`
+- Curated registries (e.g., service identity mapping): `contracts/registry/`
 
 3) **Backend stack decision (current direction)**
 - Primary backend: **Python + FastAPI**.

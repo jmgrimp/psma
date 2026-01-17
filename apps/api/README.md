@@ -63,6 +63,10 @@ TMDB (requires `PSMA_TMDB_API_KEY`):
 
 - `GET /providers/tmdb/search/tv?query=Breaking+Bad`
 - `GET /providers/tmdb/tv/{series_id}/watch/providers?country=US`
+- List providers for a region (to populate a selector):
+	- `GET /providers/tmdb/watch/providers/tv?country=US&language=en-US`
+- Discover shows by selected provider (example: Netflix=8):
+	- `GET /providers/tmdb/discover/tv?watch_provider_id=8&country=US&monetization_types=flatrate,free&sort_by=popularity.desc&page=1`
 
 Notes:
 

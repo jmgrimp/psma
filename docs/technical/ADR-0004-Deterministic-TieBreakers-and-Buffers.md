@@ -21,9 +21,22 @@ When multiple services offer availability for the same show in the region/time w
 
 1. Prefer the service/fact with the **highest confidence**.
 2. If tied, prefer the fact with the **most recent retrieved_at**.
-3. If still tied, prefer the service with the **lowest stable sort key** (e.g., service_id lexical order).
+3. If still tied, prefer the service with the **lowest subscription price** *when price is known and comparable*.
+4. If still tied (or price is unknown/unavailable), prefer the service with the **lowest stable sort key** (e.g., service_id lexical order).
+5. If the remaining options are still meaningfully different for the user (e.g., different “permanent service” status, different ad tiers, or user preference), PSMA may ask the user to break the tie.
 
 The planner must record that alternatives existed and that a deterministic tie-breaker was applied.
+
+User tie-break policy:
+- The planner must remain deterministic *given the same inputs*. Asking the user is allowed if the user’s choice is stored as an explicit, provenance-backed resolution (a user-confirmed fact/preference).
+- Until the user responds, PSMA should either:
+	- generate a **provisional** plan using the stable sort key and clearly mark it as requiring confirmation, or
+	- block plan finalization for that specific decision and surface a targeted question.
+
+Notes on price tie-breaker:
+- Price inputs must be treated as time-bound facts with provenance and `retrieved_at` (prices change).
+- If prices are from different tiers (ad vs ad-free) or billing cycles (monthly vs annual), PSMA must either normalize explicitly or treat them as non-comparable.
+- If price is missing or non-comparable, do not block planning; fall back to the stable sort key.
 
 ### 2) Unsubscribe buffer policy
 To reduce edge-case risk (time zones, “available until” semantics, provider lag):
