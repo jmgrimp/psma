@@ -2,7 +2,7 @@
 
 ## Prereqs
 
-- Node.js >= 20.9
+- Node.js >= 20.9 (recommended: use repo root `.nvmrc`)
 - pnpm (via Corepack)
 
 ## Install

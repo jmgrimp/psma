@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psma.dev/schemas/planning/plan-request.v1.schema.json",
+  "title": "PlanRequestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["country", "assessments", "permanent_service_ids", "horizon_days"],
+  "$defs": {
+    "anyValue": {
+      "description": "Arbitrary JSON value; constrained to JSON-compatible types.",
+      "oneOf": [
+        {"type": "null"},
+        {"type": "boolean"},
+        {"type": "integer"},
+        {"type": "number"},
+        {"type": "string"},
+        {"type": "array", "items": {"$ref": "#/$defs/anyValue"}},
+        {"type": "object", "additionalProperties": {"$ref": "#/$defs/anyValue"}}
+      ]
+    },
+    "planningInputV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable input key. New keys may be added without changing the envelope shape."
+        },
+        "value": {"$ref": "#/$defs/anyValue"},
+        "service_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "description": "Optional service scope for the input."
+        },
+        "title_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "description": "Optional title scope for the input."
+        },
+        "source_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "description": "Optional provenance identifier (e.g., ui, import, ai_suggested)."
+        },
+        "collected_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "When this input was collected (optional)."
+        },
+        "notes": {
+          "type": ["string", "null"],
+          "description": "Optional human-readable notes."
+        }
+      }
+    }
+  },
+  "properties": {
+    "country": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "assessments": {
+      "type": "array",
+      "items": {
+        "$ref": "../availability/availability-assessment.v1.schema.json"
+      }
+    },
+    "permanent_service_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "description": "Services treated as already subscribed (no subscribe/unsubscribe events)."
+    },
+    "horizon_days": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 365,
+      "description": "How far ahead the plan should consider."
+    },
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/planningInputV1"},
+      "description": "Optional open-ended planner inputs (user preferences, constraints, derived estimates)."
+    }
+  }
+}

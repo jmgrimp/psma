@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psma.dev/schemas/planning/plan-response.v1.schema.json",
+  "title": "PlanResponseV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["generated_at", "country", "horizon_days", "events"],
+  "$defs": {
+    "planQuestionV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "key", "prompt", "required"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier for de-duplication and UI tracking."
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable question key. New keys may be added without changing the envelope shape."
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "service_id": {
+          "type": ["string", "null"],
+          "minLength": 1,
+          "description": "Optional service scope for the question."
+        },
+        "title_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "description": "Optional title scope for the question."
+        },
+        "answer_schema": {
+          "type": ["object", "null"],
+          "additionalProperties": true,
+          "description": "Optional JSON Schema fragment describing the expected answer."
+        },
+        "rationale": {
+          "type": ["string", "null"],
+          "description": "Optional explanation of why this question matters."
+        }
+      }
+    }
+  },
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this plan was generated."
+    },
+    "country": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "horizon_days": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 365
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "service_id", "effective_at", "reason_codes", "title_ids"],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["subscribe", "unsubscribe"]
+          },
+          "service_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effective_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1
+          },
+          "title_ids": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/planQuestionV1"},
+      "description": "Optional follow-up questions required to produce a more accurate, personalized schedule."
+    }
+  }
+}

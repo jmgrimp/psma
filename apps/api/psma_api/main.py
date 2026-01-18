@@ -16,6 +16,9 @@ from psma_api.logging_context import request_id_var
 from psma_api.settings import settings
 from psma_api.routes.providers_tmdb import router as providers_tmdb_router
 from psma_api.routes.providers_tvmaze import router as providers_tvmaze_router
+from psma_api.routes.availability_engine_v1 import router as availability_engine_v1_router
+from psma_api.routes.availability_v1 import router as availability_v1_router
+from psma_api.routes.planning_v1 import router as planning_v1_router
 
 
 setup_logging(level=settings.log_level, fmt=settings.log_format)
@@ -51,6 +54,9 @@ app.add_middleware(
 
 app.include_router(providers_tvmaze_router)
 app.include_router(providers_tmdb_router)
+app.include_router(availability_engine_v1_router)
+app.include_router(availability_v1_router)
+app.include_router(planning_v1_router)
 
 
 @app.middleware("http")

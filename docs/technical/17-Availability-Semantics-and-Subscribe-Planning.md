@@ -126,6 +126,10 @@ Planning depends on both (a) provider type and (b) episode cadence.
 - Episode air schedule (past + upcoming)
 - User preferences (buffers, “binge vs weekly”, etc.)
 
+Implementation note:
+- The current API supports an extensible `inputs[]` request field and `questions[]` response field so the planner can ask for missing personalization data while remaining deterministic.
+- See `docs/technical/20-Planner-Inputs-and-Questions.md`.
+
 See also:
 - ADR-0004-Deterministic-TieBreakers-and-Buffers.md
 

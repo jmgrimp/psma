@@ -29,6 +29,7 @@ Recommended installs:
 
 - Node via nvm:
 	- `nvm install && nvm use`
+	- Tip: open a new shell in the repo and run `nvm use` anytime you see a Node engine warning.
 - pnpm via Corepack:
 	- `corepack enable && corepack prepare pnpm@9.15.4 --activate`
 - `uv` (macOS/Linux):
@@ -37,6 +38,8 @@ Recommended installs:
 		- `source $HOME/.local/bin/env`
 
 ### Install
+
+Note: `pnpm install` enforces Node >= 20.9 via a repo-root `preinstall` check.
 
 1) Install Node dependencies (repo root):
 - `pnpm install`

@@ -7,6 +7,11 @@ import time
 import httpx
 from fastapi import Request
 
+from psma_api.engines.availability_engine_impl import DefaultAvailabilityEngine
+from psma_api.engines.planner_engine_impl import DefaultPlannerEngine
+from psma_api.ports.availability_engine import AvailabilityEngine
+from psma_api.ports.planner_engine import PlannerEngine
+
 from psma_api.settings import settings
 
 
@@ -82,3 +87,19 @@ async def get_http_client(request: Request) -> AsyncIterator[httpx.AsyncClient]:
 
     async with build_http_client() as client:
         yield client
+
+
+def get_availability_engine() -> AvailabilityEngine:
+    # Kept intentionally simple for MVP. In the future, this can be swapped via:
+    # - configuration (import path)
+    # - entrypoints/plugin discovery
+    # - a worker process using the same contract
+    return DefaultAvailabilityEngine()
+
+
+def get_planner_engine() -> PlannerEngine:
+    # Kept intentionally simple for MVP. In the future, this can be swapped via:
+    # - configuration (import path)
+    # - entrypoints/plugin discovery
+    # - a worker process using the same contract
+    return DefaultPlannerEngine()

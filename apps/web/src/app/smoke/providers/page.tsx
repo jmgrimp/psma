@@ -65,6 +65,10 @@ export default function ProviderSmokePage() {
   const [tmdbCountry, setTmdbCountry] = useState("US");
   const [tmdbProvidersState, setTmdbProvidersState] = useState<FetchState>({ status: "idle" });
 
+  const [availabilitySeriesId, setAvailabilitySeriesId] = useState("1396");
+  const [availabilityCountry, setAvailabilityCountry] = useState("US");
+  const [availabilityFacadeState, setAvailabilityFacadeState] = useState<FetchState>({ status: "idle" });
+
   const [tmdbProvidersListCountry, setTmdbProvidersListCountry] = useState("US");
   const [tmdbProvidersListLanguage, setTmdbProvidersListLanguage] = useState("en-US");
   const [tmdbProvidersListState, setTmdbProvidersListState] = useState<FetchState>({ status: "idle" });
@@ -310,6 +314,68 @@ export default function ProviderSmokePage() {
               {tmdbProvidersState.httpStatus ? ` (HTTP ${tmdbProvidersState.httpStatus})` : ""}
             </p>
             {tmdbProvidersState.body !== undefined && <PrettyJson value={tmdbProvidersState.body} />}
+          </>
+        )}
+      </section>
+
+      <section className="rounded-md border p-4">
+        <h2 className="text-base font-medium">Availability: v1 façade (TMDB TV)</h2>
+
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={availabilitySeriesId}
+            onChange={(e) => setAvailabilitySeriesId(e.target.value)}
+            placeholder="Series ID (e.g. 1396)"
+          />
+          <input
+            className="rounded-md border bg-transparent px-3 py-2 text-sm"
+            value={availabilityCountry}
+            onChange={(e) => setAvailabilityCountry(e.target.value)}
+            placeholder="Country (e.g. US)"
+          />
+          <button
+            className="rounded-md border px-3 py-2 text-sm"
+            onClick={async () => {
+              setAvailabilityFacadeState({ status: "loading" });
+              try {
+                const country = availabilityCountry.trim();
+                const url =
+                  country.length > 0
+                    ? `${baseUrl}/availability/v1/tmdb/tv/${encodeURIComponent(availabilitySeriesId)}?country=${encodeURIComponent(
+                        country
+                      )}`
+                    : `${baseUrl}/availability/v1/tmdb/tv/${encodeURIComponent(availabilitySeriesId)}`;
+                const result = await fetchJson(url);
+                setAvailabilityFacadeState({ status: "success", ...result });
+              } catch (err: unknown) {
+                const e = normalizeFetchError(err);
+                setAvailabilityFacadeState({ status: "error", message: e.message, httpStatus: e.httpStatus, body: e.body });
+              }
+            }}
+          >
+            Run
+          </button>
+        </div>
+
+        {availabilityFacadeState.status === "loading" && (
+          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">Loading…</p>
+        )}
+
+        {availabilityFacadeState.status === "success" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">HTTP {availabilityFacadeState.httpStatus}</p>
+            <PrettyJson value={availabilityFacadeState.body} />
+          </>
+        )}
+
+        {availabilityFacadeState.status === "error" && (
+          <>
+            <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+              Error: {availabilityFacadeState.message}
+              {availabilityFacadeState.httpStatus ? ` (HTTP ${availabilityFacadeState.httpStatus})` : ""}
+            </p>
+            {availabilityFacadeState.body !== undefined && <PrettyJson value={availabilityFacadeState.body} />}
           </>
         )}
       </section>

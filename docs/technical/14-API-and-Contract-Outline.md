@@ -14,6 +14,9 @@ This document outlines the external API capabilities and the contract artifacts 
 - **Availability engine outputs** (JSON Schema):
 	- `contracts/jsonschema/availability/availability-assessment.v1.schema.json`
 	- `contracts/jsonschema/availability/availability-assessments-response.v1.schema.json`
+- **Planner outputs** (JSON Schema):
+	- `contracts/jsonschema/planning/plan-request.v1.schema.json`
+	- `contracts/jsonschema/planning/plan-response.v1.schema.json`
 - **Curated registries** (data normalization, checked-in):
 	- `contracts/registry/service-registry.v1.json` (canonical `service_id` mappings)
 
@@ -36,9 +39,15 @@ This document outlines the external API capabilities and the contract artifacts 
 - `DELETE /my-shows/{show_id}`
 
 ### Planning
-- `POST /plan/generate`
-- `GET /plan`
-- `GET /plan/delta` (latest delta vs prior)
+- Implemented (stable façade):
+	- `POST /plan/v1/generate`
+- Planned:
+	- `GET /plan`
+	- `GET /plan/delta` (latest delta vs prior)
+
+Notes:
+- Planning v1 supports an extensible `inputs[]` request field and optional `questions[]` response field for gathering missing personalization data in a structured way.
+- See `docs/technical/20-Planner-Inputs-and-Questions.md`.
 
 ### Conflicts
 - `GET /conflicts`
